@@ -11,34 +11,38 @@ struct QuestionView: View {
     @EnvironmentObject var quizManager: QuizManager
     var body: some View {
         if quizManager.playingGame {
-        VStack(spacing: 20) {
-            HStack {
-                Text("Country Flag Quiz")
-                    .foregroundColor(.yellow)
-                    .fontWeight(.heavy)
-                Spacer()
-                Text("\(quizManager.index) out of \(quizManager.questions.count)")
-                    .foregroundColor(.yellow)
-            }
-            ProgressBar(progress: quizManager.progress)
-            VStack(spacing: 10) {
-                Text("Which country's flag is this?")
-                Image(quizManager.country)
-                    .resizable()
-                    .frame(width: 300, height: 200)
-                ForEach(quizManager.answerChoices) { answer in
-                    AnswerRow(answer: answer)
-                        .environmentObject(quizManager)
+            VStack(spacing: 20) {
+                HStack {
+                    Text("Country Flag Quiz")
+                        .foregroundColor(.yellow)
+                        .fontWeight(.heavy)
+                    Spacer()
+                    Text("\(quizManager.index) out of \(quizManager.questions.count)")
+                        .foregroundColor(.yellow)
                 }
+                ProgressBar(progress: quizManager.progress)
+                VStack(spacing: 10) {
+                    Text("Which country's flag is this?")
+                    Image(quizManager.country)
+                        .resizable()
+                        .frame(width: 300, height: 200)
+                    ForEach(quizManager.answerChoices) { answer in
+                        AnswerRow(answer: answer)
+                            .environmentObject(quizManager)
+                    }
+                }
+                Button {
+                    quizManager.goToNextQuestion()
+                } label: {
+                    CustomButton(text: "Next", background: quizManager.answerSelected ? .yellow : .gray)
+                }
+                .disabled(!quizManager.answerSelected)
+                Spacer()
             }
-            Button {
-                quizManager.goToNextQuestion()
-            } label: {
-                CustomButton(text: "Next", background: quizManager.answerSelected ? .yellow : .gray)
-            }
-            .disabled(!quizManager.answerSelected)
+            .padding()
+            .background(.cyan)
         }
-        } else {
+        else {
             VStack(spacing: 20) {
                 Text("Country Flag Quiz")
                     .font(.title)
